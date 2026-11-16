@@ -74,6 +74,29 @@ In VS Code, run **Chat: Install Plugin From Source** and enter `https://github.c
 </details>
 
 <details>
+<summary><strong>Google Antigravity</strong></summary>
+
+Clone the repo and open it in Antigravity (`.agents/skills.json`, `.agents/hooks.json`, and `.agents/rules/antigravity.md` load automatically):
+
+```bash
+git clone https://github.com/mattpocock/skills.git
+```
+
+To share that clone across every workspace on your machine, inherit its manifest once in `~/.gemini/config/skills.json`:
+
+```json
+{
+  "inherits": [
+    { "path": "/path/to/skills/.agents/skills.json" }
+  ]
+}
+```
+
+Updates itself at session start.
+
+</details>
+
+<details>
 <summary><strong>Gemini CLI</strong> (manual updates)</summary>
 
 ```bash

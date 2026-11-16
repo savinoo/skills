@@ -1,0 +1,10 @@
+{
+  "mattpocock-skills": {
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "git pull --ff-only -q 2>/dev/null || true; echo '{}'"
+      }
+    ]
+  }
+}

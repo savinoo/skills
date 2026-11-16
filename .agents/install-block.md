@@ -8,16 +8,17 @@ Lead with installs that update themselves. Fall back to skills.sh, labelled "man
 
 Claude Code installs from its official marketplace, `claude-plugins-official`. Every other managed route installs from this repo's own marketplace, `.claude-plugin/marketplace.json` and `plugin.json`. Those routes reinstall only when the `version` in `plugin.json` changes. The Release workflow runs `npm run version`, which copies that field from `package.json`, so users get a release when the "chore: version skills" PR merges.
 
-| Agent         | Route                            | Updates itself?                                                  |
-| ------------- | -------------------------------- | ---------------------------------------------------------------- |
-| Claude Code   | `@claude-plugins-official`       | Yes, by default                                                  |
-| Codex         | `@mattpocock` marketplace        | Yes, at startup, by default                                      |
-| Copilot CLI   | `@mattpocock` marketplace        | Yes, after a one-time `autoUpdate: true`                         |
-| VS Code       | Chat: Install Plugin From Source | Yes, daily, by default                                           |
-| Gemini CLI    | `gemini skills install` (copies) | No. A Gemini extension would need a flat `skills/<name>/` layout |
-| Everyone else | skills.sh                        | No. Run `npx skills update`, and re-run `add` for new skills     |
+| Agent              | Route                            | Updates itself?                                                  |
+| ------------------ | -------------------------------- | ---------------------------------------------------------------- |
+| Claude Code        | `@claude-plugins-official`       | Yes, by default                                                  |
+| Codex              | `@mattpocock` marketplace        | Yes, at startup, by default                                      |
+| Copilot CLI        | `@mattpocock` marketplace        | Yes, after a one-time `autoUpdate: true`                         |
+| VS Code            | Chat: Install Plugin From Source | Yes, daily, by default                                           |
+| Google Antigravity | `.agents/` (`skills.json`, `hooks.json`, `rules/`) | Yes, at session start, via `.agents/hooks.json`                  |
+| Gemini CLI         | `gemini skills install` (copies) | No. A Gemini extension would need a flat `skills/<name>/` layout |
+| Everyone else      | skills.sh                        | No. Run `npx skills update`, and re-run `add` for new skills     |
 
-Sources (2026-10-08): Codex `core-plugins/src/manager.rs`; Copilot [cli-config-dir-reference](https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-config-dir-reference); VS Code `pluginAutoUpdate.ts`; Gemini `skillLoader.ts`.
+Sources (2026-10-08): Codex `core-plugins/src/manager.rs`; Copilot [cli-config-dir-reference](https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-config-dir-reference); VS Code `pluginAutoUpdate.ts`; Gemini `skillLoader.ts`; Google Antigravity `LanguageServerService/GetAllSkills` against `.agents/skills.json` (2026-11-16).
 
 Nobody has run Auggie, Droid, Qwen or Goose against this repo, so they stay on skills.sh until someone does.
 
@@ -68,6 +69,32 @@ Then, once, add to `~/.copilot/settings.json`:
 ```
 
 In VS Code, run **Chat: Install Plugin From Source** and enter `https://github.com/mattpocock/skills`. It updates daily.
+
+</canonical-block>
+
+## Google Antigravity
+
+`.agents/` ships native Antigravity workspace configuration out of the box: `.agents/skills.json` registers the two promoted buckets (`skills/engineering` and `skills/productivity`, 27 skills, honoring `disable-model-invocation: true`), `.agents/hooks.json` runs `git pull --ff-only` on `SessionStart`, and `.agents/rules/antigravity.md` maps skill and subagent primitives (`read_file`, `invoke_subagent`) for Antigravity (verified 2026-11-16).
+
+<canonical-block name="antigravity">
+
+Clone the repo and open it in Antigravity (`.agents/skills.json`, `.agents/hooks.json`, and `.agents/rules/antigravity.md` load automatically):
+
+```bash
+git clone https://github.com/mattpocock/skills.git
+```
+
+To share that clone across every workspace on your machine, inherit its manifest once in `~/.gemini/config/skills.json`:
+
+```json
+{
+  "inherits": [
+    { "path": "/path/to/skills/.agents/skills.json" }
+  ]
+}
+```
+
+Updates itself at session start.
 
 </canonical-block>
 
