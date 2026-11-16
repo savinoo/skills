@@ -74,14 +74,21 @@ In VS Code, run **Chat: Install Plugin From Source** and enter `https://github.c
 </details>
 
 <details>
-<summary><strong>Gemini CLI</strong> (manual updates)</summary>
+<summary><strong>Google Antigravity &amp; Gemini CLI</strong></summary>
 
 ```bash
-gemini skills install https://github.com/mattpocock/skills.git --path skills/engineering
-gemini skills install https://github.com/mattpocock/skills.git --path skills/productivity
+# Option A: Link globally into Antigravity (~/.gemini/config/skills) and Gemini CLI (~/.gemini/skills)
+./scripts/link-skills.sh
+
+# Option B: Install into a project via skills.sh
+npx skills@latest add savinoo/skills -a antigravity
+
+# Option C: Gemini CLI native skill installer
+gemini skills install https://github.com/savinoo/skills.git --path skills/engineering
+gemini skills install https://github.com/savinoo/skills.git --path skills/productivity
 ```
 
-Re-run both commands to update.
+Opening this repo in Google Antigravity also loads every skill automatically via `.agents/skills.json`.
 
 </details>
 

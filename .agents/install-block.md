@@ -71,18 +71,23 @@ In VS Code, run **Chat: Install Plugin From Source** and enter `https://github.c
 
 </canonical-block>
 
-## Gemini CLI
+## Gemini CLI and Google Antigravity
 
-Gemini doesn't read `.claude-plugin`, and `--path` takes one bucket. One install per promoted bucket gives exactly the promoted set (27 skills, verified 2026-10-07).
+In Google Antigravity, opening a clone of this repo auto-discovers all skills via `.agents/skills.json`. To link all skills globally into Antigravity (`~/.gemini/config/skills`), Gemini CLI (`~/.gemini/skills`), Claude Code (`~/.claude/skills`), and Codex (`~/.agents/skills`), run `./scripts/link-skills.sh`, or install via `npx skills@latest`:
 
 <canonical-block name="gemini">
 
 ```bash
-gemini skills install https://github.com/mattpocock/skills.git --path skills/engineering
-gemini skills install https://github.com/mattpocock/skills.git --path skills/productivity
-```
+# Option A: Link directly from a local clone (updates on git pull)
+./scripts/link-skills.sh
 
-Re-run both commands to update.
+# Option B: Install into a project via skills.sh (Antigravity / Gemini CLI)
+npx skills@latest add savinoo/skills -a antigravity
+
+# Option C: Gemini CLI native skill installer
+gemini skills install https://github.com/savinoo/skills.git --path skills/engineering
+gemini skills install https://github.com/savinoo/skills.git --path skills/productivity
+```
 
 </canonical-block>
 

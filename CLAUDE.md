@@ -20,14 +20,22 @@ Every `SKILL.md` is either user-invoked (`disable-model-invocation: true` plus `
 
 [`ask-matt`](./skills/engineering/ask-matt/SKILL.md) is the router that maps every user-reachable skill and how they relate. The same trigger that re-syncs a docs page applies to it: whenever you add, rename, remove, or change how a user-reachable skill fits the flows, re-read `ask-matt`'s `SKILL.md` and update it so the map stays accurate: a new skill it never mentions, or a stale one it still routes to, is a router that lies.
 
-To (re)link every skill outside `deprecated/` and `misc/` into the local harness skill directories (`~/.claude/skills`, `~/.agents/skills`), run `scripts/link-skills.sh`. Each entry is a symlink into this repo, so a `git pull` keeps installed skills current; re-run the script after adding, removing, or renaming a skill.
+To (re)link every skill outside `deprecated/` and `misc/` into the local harness skill directories (`~/.claude/skills`, `~/.agents/skills`, `~/.gemini/config/skills`, `~/.gemini/skills`), run `scripts/link-skills.sh`. Each entry is a symlink into this repo, so a `git pull` keeps installed skills current; re-run the script after adding, removing, or renaming a skill. Workspace discovery in Google Antigravity is wired through [`.agents/skills.json`](./.agents/skills.json), and root manifests live at [`plugin.json`](./plugin.json) and [`gemini-extension.json`](./gemini-extension.json) (kept in sync with `package.json` via `scripts/sync-plugin-version.mjs`).
 
 No em-dashes anywhere in this repo's prose (`SKILL.md` files, docs, `README.md`, `CHANGELOG.md`, ADRs, changesets, code comments). Where a sentence reaches for one, rewrite it instead with a comma, colon, period, parentheses, or a conjunction, whichever the sentence actually wants; never do a blind character substitution.
 
-Every skill that dispatches a subagent says to start it with a fresh context window. Some harnesses (Codex, for one) fork the parent conversation by default, and a fork inherits the parent's context, which is what the subagent was meant to escape.
+Every skill that dispatches a subagent says to start it with a fresh context window. Some harnesses (Codex, for one) fork the parent conversation by default, and a fork inherits the parent's context, which is what the subagent was meant to escape. In Google Antigravity / Gemini, dispatch subagents with `invoke_subagent` (`TypeName: "self"` when the subagent must write files, run commands, or search the web, and `TypeName: "research"` for read-only local exploration; use `Workspace: "share"` when a skill asks for an isolated worktree per subagent). When a skill instructs you to "Call the Skill tool with `<name>`" and your harness does not expose a `Skill` tool (as in Antigravity / Gemini), activate `<name>` by reading its `SKILL.md` with `read_file` and following its instructions.
 
 ## Agent skills
+
+### Issue tracker
+
+GitHub Issues in `savinoo/skills` via `gh` CLI. See `docs/agents/issue-tracker.md`.
 
 ### Triage labels
 
 Canonical names, unchanged. See `docs/agents/triage-labels.md`. Issues are judged against [`SCOPE.md`](./SCOPE.md).
+
+### Domain docs
+
+Single-context (`GLOSSARY.md` + `docs/adr/` at the repo root). See `docs/agents/domain.md`.
